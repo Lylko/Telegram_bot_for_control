@@ -2,6 +2,7 @@ import config
 import logging
 import asyncio, pyowm
 from datetime import datetime
+import time
 
 from aiogram import Bot, Dispatcher, executor, types
 from Classes import MySQL
@@ -13,7 +14,6 @@ bot = Bot(token=config.API_TOKEN)
 dp = Dispatcher(bot)
 #===============================================================================
 db = MySQL()
-
 #-----------------------------изменение статуса---------------------------------
 @dp.message_handler(commands=['change_status', 'status'])
 async def status(message: types.Message):
@@ -79,9 +79,14 @@ async def echo(message: types.Message):
 	await message.answer('Нет такой команды.')
 #-------
 
-
+async def task():
+  while True:
+    db.commit()
+    await asyncio.sleep(200)
 
 
 # long polling
 if __name__ == '__main__': 
+	loop = asyncio.get_event_loop()
+	loop.create_task(task())
 	executor.start_polling(dp, skip_updates=True)
