@@ -67,8 +67,10 @@ async def new_user(message: types.Message):
 @dp.message_handler(commands=['show'])
 async def show_info(message: types.Message):
         if (db.user_exist(message.from_user.id) == True):
+            db.commit()
             await message.answer("Ваш личный id (его надо будет указать в программе рига): {}.\nСтатус пользования: {}. (1 - контроль включен,0 - выключен. Чтобы изменить это значение - /status).\nСтатус выполнения команды: {}. (0 - все команды выполнены, любое другое значение - команда ожидает выполнения.)".format(db.check_parametrs(message.from_user.id)[0][1],db.check_parametrs(message.from_user.id)[0][2],db.check_parametrs(message.from_user.id)[0][3]))
         else:
+            db.commit()
             await message.answer("Сначала создайте нового пользователя /new")
 
 
